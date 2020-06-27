@@ -23,7 +23,7 @@ class TransactionsRepository {
     return this.transactions;
   }
 
-  public getTotalValue(type: 'income' | 'outcome'): number {
+  public getTotalTypeValue(type: 'income' | 'outcome'): number {
     const value = this.transactions.reduce((accumulator, transaction) => {
       if (transaction.type === type) {
         return accumulator + transaction.value;
@@ -33,10 +33,16 @@ class TransactionsRepository {
     return value;
   }
 
+  public getTotalValue(): number {
+    const income = this.getTotalTypeValue('income');
+    const outcome = this.getTotalTypeValue('outcome');
+    return income - outcome;
+  }
+
   public getBalance(): Balance {
-    const income = this.getTotalValue('income');
-    const outcome = this.getTotalValue('outcome');
-    const total = income - outcome;
+    const income = this.getTotalTypeValue('income');
+    const outcome = this.getTotalTypeValue('outcome');
+    const total = this.getTotalValue();
 
     const balance = {
       income,

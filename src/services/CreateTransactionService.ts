@@ -19,6 +19,13 @@ class CreateTransactionService {
       throw Error('Type value must be "income" or "outcome"');
     }
 
+    const totalValue = this.transactionsRepository.getTotalValue();
+    if (type === 'outcome' && value > totalValue) {
+      throw Error(
+        `Outcome value cannot be higher than total available value: ${totalValue}`,
+      );
+    }
+
     const transaction = this.transactionsRepository.create({
       title,
       value,
