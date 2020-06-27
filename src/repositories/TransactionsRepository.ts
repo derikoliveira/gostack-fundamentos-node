@@ -23,19 +23,19 @@ class TransactionsRepository {
     return this.transactions;
   }
 
-  public getBalance(): Balance {
-    const getTransactionValue = (type: 'income' | 'outcome'): number => {
-      let value = 0;
-      this.transactions.forEach(transaction => {
-        if (transaction.type === type) {
-          value += transaction.value;
-        }
-      });
-      return value;
-    };
+  public getTotalValue(type: 'income' | 'outcome'): number {
+    const value = this.transactions.reduce((accumulator, transaction) => {
+      if (transaction.type === type) {
+        return accumulator + transaction.value;
+      }
+      return accumulator;
+    }, 0);
+    return value;
+  }
 
-    const income = getTransactionValue('income');
-    const outcome = getTransactionValue('outcome');
+  public getBalance(): Balance {
+    const income = this.getTotalValue('income');
+    const outcome = this.getTotalValue('outcome');
     const total = income - outcome;
 
     const balance = {
