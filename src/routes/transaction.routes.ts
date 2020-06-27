@@ -9,7 +9,15 @@ const transactionsRepository = new TransactionsRepository();
 
 transactionRouter.get('/', (request, response) => {
   try {
-    return response.json({ message: 'Hello, World!' });
+    const transactions = transactionsRepository.all();
+    const balance = transactionsRepository.getBalance();
+
+    const responseObj = {
+      transactions,
+      balance,
+    };
+
+    return response.json(responseObj);
   } catch (err) {
     return response.status(400).json({ error: err.message });
   }

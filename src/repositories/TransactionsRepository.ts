@@ -20,11 +20,31 @@ class TransactionsRepository {
   }
 
   public all(): Transaction[] {
-    // TODO
+    return this.transactions;
   }
 
   public getBalance(): Balance {
-    // TODO
+    const getTransactionValue = (type: 'income' | 'outcome'): number => {
+      let value = 0;
+      this.transactions.forEach(transaction => {
+        if (transaction.type === type) {
+          value += transaction.value;
+        }
+      });
+      return value;
+    };
+
+    const income = getTransactionValue('income');
+    const outcome = getTransactionValue('outcome');
+    const total = income - outcome;
+
+    const balance = {
+      income,
+      outcome,
+      total,
+    };
+
+    return balance;
   }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {
